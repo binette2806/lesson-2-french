@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours de Français — Se présenter 🇫🇷</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #1B3F8B; min-height: 100vh; padding: 20px 16px 40px; }
+  .app { max-width: 700px; margin: 0 auto; }
+  .header { text-align: center; margin-bottom: 20px; }
+  .header h1 { color: #fff; font-size: 1.9em; margin-bottom: 4px; }
+  .header p { color: #CADCFC; font-size: 0.9em; }
+  .header .topic { color: #C9A84C; font-weight: 700; font-size: 1em; margin-top: 6px; }
+  .progress-bar { background: rgba(255,255,255,0.15); border-radius: 8px; height: 6px; margin-bottom: 18px; }
+  .progress-fill { background: #C9A84C; border-radius: 8px; height: 6px; transition: width 0.4s ease; }
+  .warning { background: #FFF3CD; border: 1px solid #C9A84C; border-radius: 10px; padding: 10px 14px; font-size: 0.82em; color: #7A5C00; margin-bottom: 14px; text-align: center; display: none; }
+  .card { background: #fff; border-radius: 18px; padding: 22px; box-shadow: 0 8px 32px rgba(0,0,0,0.25); margin-bottom: 14px; }
+  .theme-badge { display: inline-block; background: #EBF4FF; color: #1B3F8B; font-size: 0.72em; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding: 4px 10px; border-radius: 20px; margin-bottom: 12px; }
+  .q-box { background: #1B3F8B; border-radius: 12px; padding: 16px 18px; margin-bottom: 14px; }
+  .q-label { font-size: 0.68em; color: #A3BDD6; font-weight: 700; margin-bottom: 5px; letter-spacing: 0.5px; }
+  .q-fr { font-size: 1.3em; font-weight: 700; color: #C9A84C; margin-bottom: 4px; }
+  .q-en { font-size: 0.92em; color: #CADCFC; font-style: italic; }
+  .a-box { display: flex; border: 1.5px solid #D1E4F5; border-radius: 12px; overflow: hidden; margin-bottom: 12px; }
+  .a-col { flex: 1; padding: 12px 14px; }
+  .a-col:first-child { border-right: 1.5px solid #D1E4F5; background: #F5F9FF; }
+  .a-col:last-child { background: #FAFAFA; }
+  .a-label { font-size: 0.68em; color: #6B7280; font-weight: 700; margin-bottom: 5px; letter-spacing: 0.5px; }
+  .a-fr { font-size: 1em; font-weight: 700; color: #1B3F8B; line-height: 1.65; }
+  .a-en { font-size: 0.95em; color: #374151; font-style: italic; line-height: 1.65; }
+  .note { background: #FFF8E1; border: 1px solid #C9A84C; border-radius: 10px; padding: 9px 13px; font-size: 0.82em; color: #7A5C00; margin-bottom: 14px; line-height: 1.5; }
+  .speak-btn { width: 100%; padding: 12px; border: none; border-radius: 10px; background: #C0392B; color: #fff; font-size: 1em; font-weight: 700; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+  .speak-btn:hover { background: #a93226; }
+  .speak-btn.speaking { background: #10836A; }
+  .nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .nav-btn { flex: 1; padding: 12px; border: none; border-radius: 10px; background: #C9A84C; color: #1B3F8B; font-size: 0.95em; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+  .nav-btn:hover { background: #b8953f; }
+  .nav-btn:disabled { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.35); cursor: not-allowed; }
+  .counter { color: #fff; font-size: 0.9em; font-weight: 600; white-space: nowrap; text-align: center; min-width: 50px; }
+  .summary { display: none; }
+  .summary h2 { color: #fff; text-align: center; font-size: 1.3em; margin-bottom: 14px; }
+  .recap-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .recap-item { background: rgba(255,255,255,0.12); border: 1px solid #C9A84C; border-radius: 10px; padding: 11px 13px; color: #fff; font-size: 0.88em; line-height: 1.5; }
+  .recap-item strong { color: #C9A84C; display: block; margin-bottom: 2px; font-size: 1em; }
+  .restart-btn { width: 100%; padding: 13px; border: none; border-radius: 10px; background: #C9A84C; color: #1B3F8B; font-size: 1em; font-weight: 700; cursor: pointer; }
+  @media (max-width: 480px) {
+    .a-box { flex-direction: column; }
+    .a-col:first-child { border-right: none; border-bottom: 1.5px solid #D1E4F5; }
+    .recap-grid { grid-template-columns: 1fr; }
+    .header h1 { font-size: 1.4em; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <h1>🇫🇷 Cours de Français</h1>
+    <div class="topic">Se présenter · Introducing yourself</div>
+    <p>Cliquez sur 🔊 pour entendre la prononciation</p>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+  <div class="warning" id="warn">⚠️ Voix française non disponible — essayez Chrome ou Edge.</div>
+
+  <div class="card" id="lesson-card">
+    <div class="theme-badge" id="theme"></div>
+    <div class="q-box">
+      <div class="q-label">❓ QUESTION</div>
+      <div class="q-fr" id="q-fr"></div>
+      <div class="q-en" id="q-en"></div>
+    </div>
+    <div class="a-box">
+      <div class="a-col">
+        <div class="a-label">🇫🇷 FRANÇAIS</div>
+        <div class="a-fr" id="a-fr"></div>
+      </div>
+      <div class="a-col">
+        <div class="a-label">🇬🇧 ENGLISH</div>
+        <div class="a-en" id="a-en"></div>
+      </div>
+    </div>
+    <div class="note" id="note"></div>
+    <button class="speak-btn" id="speak-btn" onclick="handleSpeak()">
+      🔊 Écouter la prononciation française
+    </button>
+  </div>
+
+  <div class="summary" id="summary">
+    <h2>📚 Récapitulatif · Summary</h2>
+    <div class="recap-grid" id="recap-grid"></div>
+    <button class="restart-btn" onclick="restart()">🔄 Recommencer · Restart</button>
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prev-btn" onclick="navigate(-1)">◀ Précédent</button>
+    <span class="counter" id="counter">1 / 7</span>
+    <button class="nav-btn" id="next-btn" onclick="navigate(1)">Suivant ▶</button>
+  </div>
+</div>
+
+<script>
+const lessons = [
+  {
+    theme: "Les salutations",
+    qFR: "Comment te présenter ?", qEN: "How do you introduce yourself?",
+    aFR: "Bonjour à tous !\nJe m'appelle Chim.\nEnchantée.",
+    aEN: "Hello everyone!\nMy name is Chim.\nNice to meet you.",
+    note: "💡 « Enchantée » (fém.) ou « Enchanté » (masc.) = Nice to meet you. Très élégant en français !",
+    speak: "Bonjour à tous ! Je m'appelle Chim. Enchantée."
+  },
+  {
+    theme: "La nationalité & le lieu de vie",
+    qFR: "D'où viens-tu et où habites-tu ?", qEN: "Where are you from and where do you live?",
+    aFR: "Je suis nigériane.\nJ'habite en Angleterre depuis 5 ans.",
+    aEN: "I am Nigerian.\nI have lived in England for 5 years.",
+    note: "💡 « Depuis » = since / for. J'habite en Angleterre depuis 5 ans = I've lived in England for 5 years.",
+    speak: "Je suis nigériane. J'habite en Angleterre depuis cinq ans."
+  },
+  {
+    theme: "Les animaux",
+    qFR: "Comment dit-on 'cat' et 'dog' ?", qEN: "How do you say 'cat' and 'dog'?",
+    aFR: "Un chat = a cat\nUn chien = a dog\nJ'aime beaucoup les chiens.\nJ'ai peur des chiens.",
+    aEN: "Un chat = a cat\nUn chien = a dog\nI really like dogs.\nI am afraid of dogs.",
+    note: "💡 « J'ai peur de... » = I am afraid of... Très utile pour parler de ses peurs !",
+    speak: "Un chat. Un chien. J'aime beaucoup les chiens. J'ai peur des chiens."
+  },
+  {
+    theme: "Les loisirs",
+    qFR: "Que fais-tu pendant ton temps libre ?", qEN: "What do you do in your free time?",
+    aFR: "Pendant mon temps libre,\nj'aime cuisiner et dormir.\nJ'aime chanter.\nJ'aime voyager.",
+    aEN: "In my free time,\nI like cooking and sleeping.\nI like singing.\nI love travelling.",
+    note: "💡 « Pendant mon temps libre » = In my free time. Dormir = to sleep, Cuisiner = to cook.",
+    speak: "Pendant mon temps libre, j'aime cuisiner et dormir. J'aime chanter. J'aime voyager."
+  },
+  {
+    theme: "Tu / Vous",
+    qFR: "Quelle est la différence entre « tu » et « vous » ?", qEN: "What's the difference between 'tu' and 'vous'?",
+    aFR: "Tu = quelqu'un que tu connais\n(informel : amis, famille)\nVous = nouvelle personne / formel\n(inconnus, respect)",
+    aEN: "Tu = someone you know\n(informal: friends & family)\nVous = new person / formal\n(strangers, respect)",
+    note: "💡 Avec une nouvelle personne, utilisez toujours « vous » pour être poli. On passe à « tu » quand on se connaît mieux.",
+    speak: "Tu, pour quelqu'un que tu connais. Vous, pour une nouvelle personne ou dans un contexte formel."
+  },
+  {
+    theme: "Se présenter — phrase complète",
+    qFR: "Comment se présenter complètement ?", qEN: "How to give a full introduction?",
+    aFR: "Je m'appelle Chimdema\nmais tu peux m'appeler Chim.\nJ'habite en Angleterre depuis 5 ans.\nPendant mon temps libre,\nj'aime cuisiner et voyager.",
+    aEN: "My name is Chimdema\nbut you can call me Chim.\nI've lived in England for 5 years.\nIn my free time,\nI like cooking and travelling.",
+    note: "💡 Bravo Chim ! C'est une présentation complète et naturelle en français !",
+    speak: "Je m'appelle Chimdema, mais tu peux m'appeler Chim. J'habite en Angleterre depuis cinq ans. Pendant mon temps libre, j'aime cuisiner et voyager."
+  },
+  {
+    theme: "Rebondir dans la conversation",
+    qFR: "Comment rebondir dans la conversation ?", qEN: "How to keep the conversation going?",
+    aFR: "Et toi ?\nEt toi, parle-moi de toi.\nJ'aime rencontrer de nouvelles personnes\net découvrir de nouvelles cultures.",
+    aEN: "And you?\nAnd you, tell me about yourself.\nI love meeting new people\nand discovering new cultures.",
+    note: "💡 « Et toi ? » montre de l'intérêt. Rencontrer = to meet, Découvrir = to discover.",
+    speak: "Et toi ? Et toi, parle-moi de toi. J'aime rencontrer de nouvelles personnes et découvrir de nouvelles cultures."
+  }
+];
+
+const recap = [
+  { fr: "Je m'appelle...", en: "My name is..." },
+  { fr: "Enchantée", en: "Nice to meet you" },
+  { fr: "Depuis", en: "Since / For" },
+  { fr: "J'ai peur de...", en: "I'm afraid of..." },
+  { fr: "Tu (informel)", en: "You — someone you know" },
+  { fr: "Vous (formel)", en: "You — new person / respect" },
+  { fr: "Pendant mon temps libre", en: "In my free time" },
+  { fr: "Et toi ?", en: "And you?" },
+];
+
+let current = 0;
+let frVoice = null;
+
+function loadVoices() {
+  const voices = window.speechSynthesis.getVoices();
+  frVoice = voices.find(v => v.lang === 'fr-FR') || voices.find(v => v.lang.startsWith('fr')) || null;
+  if (!frVoice) document.getElementById('warn').style.display = 'block';
+}
+if (typeof speechSynthesis !== 'undefined') {
+  speechSynthesis.onvoiceschanged = loadVoices;
+  loadVoices();
+}
+
+function speak(text, btn) {
+  if (!window.speechSynthesis) return;
+  speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'fr-FR';
+  if (frVoice) utt.voice = frVoice;
+  utt.rate = 0.82;
+  utt.pitch = 1.0;
+  if (btn) {
+    btn.classList.add('speaking');
+    btn.textContent = '⏹ Arrêter';
+    const reset = () => { btn.classList.remove('speaking'); btn.textContent = '🔊 Écouter la prononciation française'; };
+    utt.onend = reset; utt.onerror = reset;
+  }
+  speechSynthesis.speak(utt);
+}
+
+function handleSpeak() {
+  const btn = document.getElementById('speak-btn');
+  if (btn.classList.contains('speaking')) {
+    speechSynthesis.cancel();
+    btn.classList.remove('speaking');
+    btn.textContent = '🔊 Écouter la prononciation française';
+  } else {
+    speak(lessons[current].speak, btn);
+  }
+}
+
+function render() {
+  speechSynthesis.cancel();
+  const l = lessons[current];
+  document.getElementById('theme').textContent = l.theme;
+  document.getElementById('q-fr').textContent = l.qFR;
+  document.getElementById('q-en').textContent = l.qEN;
+  document.getElementById('a-fr').innerHTML = l.aFR.split('\n').join('<br>');
+  document.getElementById('a-en').innerHTML = l.aEN.split('\n').join('<br>');
+  document.getElementById('note').textContent = l.note;
+  const btn = document.getElementById('speak-btn');
+  btn.classList.remove('speaking');
+  btn.textContent = '🔊 Écouter la prononciation française';
+  document.getElementById('counter').textContent = `${current + 1} / ${lessons.length}`;
+  document.getElementById('prev-btn').disabled = current === 0;
+  document.getElementById('next-btn').disabled = false;
+  document.getElementById('next-btn').textContent = current === lessons.length - 1 ? 'Récapitulatif ▶' : 'Suivant ▶';
+  document.getElementById('progress').style.width = `${((current + 1) / lessons.length) * 100}%`;
+  document.getElementById('lesson-card').style.display = 'block';
+  document.getElementById('summary').style.display = 'none';
+}
+
+function showSummary() {
+  speechSynthesis.cancel();
+  document.getElementById('lesson-card').style.display = 'none';
+  document.getElementById('summary').style.display = 'block';
+  document.getElementById('prev-btn').disabled = false;
+  document.getElementById('next-btn').disabled = true;
+  document.getElementById('counter').textContent = '✅ Fin';
+  document.getElementById('progress').style.width = '100%';
+  document.getElementById('recap-grid').innerHTML = recap.map(r =>
+    `<div class="recap-item"><strong>${r.fr}</strong>${r.en}</div>`
+  ).join('');
+}
+
+function navigate(dir) {
+  if (dir === 1 && current === lessons.length - 1) { showSummary(); return; }
+  if (document.getElementById('summary').style.display !== 'none' && dir === -1) { current = lessons.length - 1; render(); return; }
+  current = Math.max(0, Math.min(lessons.length - 1, current + dir));
+  render();
+}
+
+function restart() { current = 0; render(); }
+
+render();
+</script>
+</body>
+</html>
