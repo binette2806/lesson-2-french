@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cours de Français — Conversations du quotidien 🇫🇷</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #1B3F8B; min-height: 100vh; padding: 20px 16px 40px; }
+  .app { max-width: 700px; margin: 0 auto; }
+  .header { text-align: center; margin-bottom: 18px; }
+  .header h1 { color: #fff; font-size: 1.8em; margin-bottom: 4px; }
+  .header .topic { color: #C9A84C; font-weight: 700; font-size: 0.95em; margin: 4px 0; }
+  .header p { color: #CADCFC; font-size: 0.85em; }
+  .progress-bar { background: rgba(255,255,255,0.15); border-radius: 8px; height: 6px; margin-bottom: 16px; }
+  .progress-fill { background: #C9A84C; border-radius: 8px; height: 6px; transition: width 0.4s ease; }
+  .warning { background: #FFF3CD; border: 1px solid #C9A84C; border-radius: 10px; padding: 9px 13px; font-size: 0.8em; color: #7A5C00; margin-bottom: 12px; text-align: center; display: none; }
+
+  /* Tab selector */
+  .tabs { display: flex; gap: 8px; margin-bottom: 14px; }
+  .tab { flex: 1; padding: 9px 6px; border: none; border-radius: 10px; background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.6); font-size: 0.85em; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+  .tab.active { background: #C9A84C; color: #1B3F8B; }
+  .tab:hover:not(.active) { background: rgba(255,255,255,0.25); color: #fff; }
+
+  /* Card */
+  .card { background: #fff; border-radius: 18px; padding: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.25); margin-bottom: 14px; }
+  .dialogue-title { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .dialogue-icon { font-size: 1.8em; }
+  .dialogue-name { font-size: 1.15em; font-weight: 700; color: #1B3F8B; }
+  .dialogue-name-en { font-size: 0.85em; color: #6B7280; font-style: italic; }
+
+  /* Dialogue lines */
+  .line { display: flex; margin-bottom: 8px; }
+  .line.chim { justify-content: flex-start; }
+  .line.other { justify-content: flex-end; }
+  .bubble { max-width: 82%; padding: 9px 13px; border-radius: 14px; }
+  .line.chim .bubble { background: #EBF4FF; border-bottom-left-radius: 4px; }
+  .line.other .bubble { background: #FFF8E1; border-bottom-right-radius: 4px; text-align: right; }
+  .who { font-size: 0.68em; font-weight: 700; margin-bottom: 2px; }
+  .line.chim .who { color: #1B3F8B; }
+  .line.other .who { color: #7A5C00; }
+  .fr-text { font-size: 0.95em; font-weight: 600; color: #1A1A2E; line-height: 1.4; }
+  .en-text { font-size: 0.82em; color: #6B7280; font-style: italic; line-height: 1.3; margin-top: 2px; }
+
+  /* Vocab */
+  .vocab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .vocab-item { background: #F5F9FF; border: 1.5px solid #D1E4F5; border-radius: 10px; padding: 11px 13px; }
+  .vocab-fr { font-size: 1em; font-weight: 700; color: #1B3F8B; margin-bottom: 3px; }
+  .vocab-en { font-size: 0.88em; color: #6B7280; font-style: italic; }
+
+  .note { background: #FFF8E1; border: 1px solid #C9A84C; border-radius: 10px; padding: 9px 13px; font-size: 0.82em; color: #7A5C00; margin-bottom: 14px; line-height: 1.5; }
+
+  /* Buttons */
+  .btn-row { display: flex; gap: 10px; }
+  .speak-btn { flex: 1; padding: 12px; border: none; border-radius: 10px; background: #C0392B; color: #fff; font-size: 0.95em; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+  .speak-btn:hover { background: #a93226; }
+  .speak-btn.speaking { background: #10836A; }
+  .vocab-btn { padding: 12px 16px; border: 2px solid #1B3F8B; border-radius: 10px; background: transparent; color: #1B3F8B; font-size: 0.9em; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+  .vocab-btn:hover { background: #1B3F8B; color: #fff; }
+  .vocab-btn.active { background: #1B3F8B; color: #fff; }
+
+  /* Nav */
+  .nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .nav-btn { flex: 1; padding: 12px; border: none; border-radius: 10px; background: #C9A84C; color: #1B3F8B; font-size: 0.95em; font-weight: 700; cursor: pointer; }
+  .nav-btn:hover { background: #b8953f; }
+  .nav-btn:disabled { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.35); cursor: not-allowed; }
+  .counter { color: #fff; font-size: 0.9em; font-weight: 600; text-align: center; min-width: 50px; }
+
+  /* Summary */
+  .summary { display: none; }
+  .summary h2 { color: #fff; text-align: center; font-size: 1.2em; margin-bottom: 14px; }
+  .recap-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .recap-item { background: rgba(255,255,255,0.12); border: 1px solid #C9A84C; border-radius: 10px; padding: 10px 12px; color: #fff; font-size: 0.85em; line-height: 1.5; }
+  .recap-item strong { color: #C9A84C; display: block; }
+  .restart-btn { width: 100%; padding: 13px; border: none; border-radius: 10px; background: #C9A84C; color: #1B3F8B; font-size: 1em; font-weight: 700; cursor: pointer; }
+
+  @media (max-width: 480px) {
+    .vocab-grid, .recap-grid { grid-template-columns: 1fr; }
+    .header h1 { font-size: 1.4em; }
+    .btn-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <h1>🇫🇷 Cours de Français</h1>
+    <div class="topic">Conversations du quotidien · Everyday conversations</div>
+    <p>Cliquez sur 🔊 pour entendre le dialogue complet</p>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+  <div class="warning" id="warn">⚠️ Voix française non disponible — essayez Chrome ou Edge.</div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab(0)">🍽️ Restaurant</button>
+    <button class="tab" onclick="switchTab(1)">🚕 Taxi</button>
+    <button class="tab" onclick="switchTab(2)">☕ Café</button>
+  </div>
+
+  <div class="card" id="main-card">
+    <div class="dialogue-title">
+      <span class="dialogue-icon" id="d-icon"></span>
+      <div>
+        <div class="dialogue-name" id="d-name"></div>
+        <div class="dialogue-name-en" id="d-name-en"></div>
+      </div>
+    </div>
+    <div id="d-content"></div>
+    <div class="note" id="d-note"></div>
+    <div class="btn-row">
+      <button class="speak-btn" id="speak-btn" onclick="handleSpeak()">🔊 Écouter le dialogue</button>
+      <button class="vocab-btn" id="vocab-btn" onclick="toggleVocab()">📖 Vocabulaire</button>
+    </div>
+  </div>
+
+  <div class="summary" id="summary">
+    <h2>📚 Récapitulatif · Summary</h2>
+    <div class="recap-grid" id="recap-grid"></div>
+    <button class="restart-btn" onclick="restart()">🔄 Recommencer · Restart</button>
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prev-btn" onclick="navigate(-1)">◀ Précédent</button>
+    <span class="counter" id="counter">1 / 3</span>
+    <button class="nav-btn" id="next-btn" onclick="navigate(1)">Suivant ▶</button>
+  </div>
+</div>
+
+<script>
+const dialogues = [
+  {
+    icon: "🍽️", name: "Au restaurant", nameEN: "At the restaurant",
+    lines: [
+      { who: "Chim", fr: "Bonjour, une table pour deux personnes s'il vous plaît.", en: "Hello, a table for two please." },
+      { who: "Serveur", fr: "Bien sûr, par ici. Voici la carte.", en: "Of course, right this way. Here is the menu." },
+      { who: "Chim", fr: "Merci. Je voudrais le plat du jour et une carafe d'eau.", en: "Thank you. I'd like the daily special and a jug of water." },
+      { who: "Serveur", fr: "Et comme dessert ?", en: "And for dessert?" },
+      { who: "Chim", fr: "Une crème brûlée, s'il vous plaît.", en: "A crème brûlée, please." },
+      { who: "Serveur", fr: "Très bien. Bon appétit !", en: "Very good. Enjoy your meal!" },
+    ],
+    vocab: [
+      { fr: "Une table pour deux", en: "A table for two" },
+      { fr: "La carte", en: "The menu" },
+      { fr: "Le plat du jour", en: "The daily special" },
+      { fr: "Une carafe d'eau", en: "A jug of water" },
+    ],
+    note: "💡 Au restaurant, utilisez toujours « vous » avec le serveur — c'est plus poli !",
+    speak: "Bonjour, une table pour deux personnes s'il vous plaît. Bien sûr, par ici. Voici la carte. Merci. Je voudrais le plat du jour et une carafe d'eau. Et comme dessert ? Une crème brûlée, s'il vous plaît. Très bien. Bon appétit !"
+  },
+  {
+    icon: "🚕", name: "Dans un taxi", nameEN: "In a taxi",
+    lines: [
+      { who: "Chim", fr: "Bonjour ! Vous êtes libre ?", en: "Hello! Are you free?" },
+      { who: "Chauffeur", fr: "Oui, où allez-vous ?", en: "Yes, where are you going?" },
+      { who: "Chim", fr: "Je vais à la gare Saint-Lazare, s'il vous plaît.", en: "I'm going to Saint-Lazare station, please." },
+      { who: "Chauffeur", fr: "Bien sûr. Il y a un peu de trafic, ça prendra environ 20 minutes.", en: "Of course. There's a bit of traffic, it'll take about 20 minutes." },
+      { who: "Chim", fr: "D'accord, merci. Je suis un peu pressée.", en: "Alright, thank you. I'm in a bit of a hurry." },
+      { who: "Chauffeur", fr: "Ne vous inquiétez pas, on y sera à temps.", en: "Don't worry, we'll be there on time." },
+      { who: "Chim", fr: "Excusez-moi, je parle pas encore très bien français… je suis encore en train d'apprendre !", en: "Sorry, I don't speak French very well yet… I'm still learning!" },
+      { who: "Chauffeur", fr: "Ah mais vous vous débrouillez très bien ! Continuez comme ça !", en: "Oh but you're doing very well! Keep it up!" },
+      { who: "Chim", fr: "Merci, c'est gentil !", en: "Thank you, that's kind!" },
+    ],
+    vocab: [
+      { fr: "Vous êtes libre ?", en: "Are you free?" },
+      { fr: "Je suis pressée", en: "I'm in a hurry" },
+      { fr: "On y sera à temps", en: "We'll be there on time" },
+      { fr: "Vous vous débrouillez bien", en: "You're managing well" },
+    ],
+    note: "💡 « Je parle pas encore très bien » = naturel à l'oral. À l'écrit : « Je ne parle pas encore très bien ».",
+    speak: "Bonjour ! Vous êtes libre ? Oui, où allez-vous ? Je vais à la gare Saint-Lazare, s'il vous plaît. Bien sûr. Il y a un peu de trafic, ça prendra environ 20 minutes. D'accord, merci. Je suis un peu pressée. Ne vous inquiétez pas, on y sera à temps. Excusez-moi, je parle pas encore très bien français... je suis encore en train d'apprendre ! Ah mais vous vous débrouillez très bien ! Continuez comme ça ! Merci, c'est gentil !"
+  },
+  {
+    icon: "☕", name: "À la machine à café", nameEN: "At the coffee machine",
+    lines: [
+      { who: "Collègue", fr: "Bonjour ! Ça va ? Ça fait longtemps qu'on ne s'est pas vu !", en: "Hello! How are you? It's been a while!" },
+      { who: "Chim", fr: "Oui, ça fait au moins deux semaines ! Ça va bien merci, et toi ?", en: "Yes, at least two weeks! I'm doing well thanks, and you?" },
+      { who: "Collègue", fr: "Pas mal ! Tu prends quoi ?", en: "Not bad! What are you having?" },
+      { who: "Chim", fr: "Un café serré, j'ai besoin de me réveiller !", en: "A strong coffee, I need to wake up!" },
+      { who: "Collègue", fr: "Moi aussi ! Au fait, tu as passé un bon weekend ?", en: "Me too! By the way, did you have a good weekend?" },
+      { who: "Chim", fr: "Oui super ! Je suis allée au cinéma samedi et j'ai cuisiné dimanche. Et toi ?", en: "Yes great! I went to the cinema on Saturday and cooked on Sunday. And you?" },
+      { who: "Collègue", fr: "Moi j'ai dormi, c'est tout… j'en avais besoin !", en: "I slept, that's all… I needed it!" },
+      { who: "Chim", fr: "Ha ha ! Bonne journée alors !", en: "Ha ha! Have a good day then!" },
+      { who: "Collègue", fr: "Toi aussi, à bientôt !", en: "You too, see you soon!" },
+    ],
+    vocab: [
+      { fr: "Ça fait longtemps !", en: "It's been a while!" },
+      { fr: "Un café serré", en: "A strong (short) coffee" },
+      { fr: "Au fait", en: "By the way" },
+      { fr: "Je suis allée au cinéma", en: "I went to the cinema" },
+    ],
+    note: "💡 « Ça fait longtemps qu'on ne s'est pas vu » est une expression très naturelle entre collègues ou amis.",
+    speak: "Bonjour ! Ça va ? Ça fait longtemps qu'on ne s'est pas vu ! Oui, ça fait au moins deux semaines ! Ça va bien merci, et toi ? Pas mal ! Tu prends quoi ? Un café serré, j'ai besoin de me réveiller ! Moi aussi ! Au fait, tu as passé un bon weekend ? Oui super ! Je suis allée au cinéma samedi et j'ai cuisiné dimanche. Et toi ? Moi j'ai dormi, c'est tout... j'en avais besoin ! Ha ha ! Bonne journée alors ! Toi aussi, à bientôt !"
+  }
+];
+
+const recap = [
+  { fr: "Une table pour deux", en: "A table for two" },
+  { fr: "Le plat du jour", en: "The daily special" },
+  { fr: "Vous êtes libre ?", en: "Are you free?" },
+  { fr: "Je parle pas encore très bien", en: "I don't speak very well yet" },
+  { fr: "Ça fait longtemps !", en: "It's been a while!" },
+  { fr: "Tu as passé un bon weekend ?", en: "Did you have a good weekend?" },
+  { fr: "Vous vous débrouillez bien !", en: "You're doing very well!" },
+  { fr: "À bientôt !", en: "See you soon!" },
+];
+
+let current = 0;
+let showVocab = false;
+let frVoice = null;
+
+function loadVoices() {
+  const voices = window.speechSynthesis.getVoices();
+  frVoice = voices.find(v => v.lang === 'fr-FR') || voices.find(v => v.lang.startsWith('fr')) || null;
+  if (!frVoice) document.getElementById('warn').style.display = 'block';
+}
+if (typeof speechSynthesis !== 'undefined') {
+  speechSynthesis.onvoiceschanged = loadVoices;
+  loadVoices();
+}
+
+function speak(text, btn) {
+  if (!window.speechSynthesis) return;
+  speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'fr-FR';
+  if (frVoice) utt.voice = frVoice;
+  utt.rate = 0.82; utt.pitch = 1.0;
+  if (btn) {
+    btn.classList.add('speaking');
+    btn.textContent = '⏹ Arrêter';
+    const reset = () => { btn.classList.remove('speaking'); btn.textContent = '🔊 Écouter le dialogue'; };
+    utt.onend = reset; utt.onerror = reset;
+  }
+  speechSynthesis.speak(utt);
+}
+
+function handleSpeak() {
+  const btn = document.getElementById('speak-btn');
+  if (btn.classList.contains('speaking')) {
+    speechSynthesis.cancel();
+    btn.classList.remove('speaking');
+    btn.textContent = '🔊 Écouter le dialogue';
+  } else {
+    speak(dialogues[current].speak, btn);
+  }
+}
+
+function renderDialogue(d) {
+  return d.lines.map(line => {
+    const isChim = line.who === 'Chim';
+    return `<div class="line ${isChim ? 'chim' : 'other'}">
+      <div class="bubble">
+        <div class="who">${line.who}</div>
+        <div class="fr-text">${line.fr}</div>
+        <div class="en-text">${line.en}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderVocab(d) {
+  return `<div class="vocab-grid">${d.vocab.map(v =>
+    `<div class="vocab-item"><div class="vocab-fr">${v.fr}</div><div class="vocab-en">${v.en}</div></div>`
+  ).join('')}</div>`;
+}
+
+function render() {
+  speechSynthesis.cancel();
+  const d = dialogues[current];
+  document.getElementById('d-icon').textContent = d.icon;
+  document.getElementById('d-name').textContent = d.name;
+  document.getElementById('d-name-en').textContent = d.nameEN;
+  document.getElementById('d-content').innerHTML = showVocab ? renderVocab(d) : renderDialogue(d);
+  document.getElementById('d-note').textContent = d.note;
+
+  const btn = document.getElementById('speak-btn');
+  btn.classList.remove('speaking');
+  btn.textContent = '🔊 Écouter le dialogue';
+
+  const vbtn = document.getElementById('vocab-btn');
+  vbtn.textContent = showVocab ? '💬 Dialogue' : '📖 Vocabulaire';
+  vbtn.classList.toggle('active', showVocab);
+
+  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === current));
+  document.getElementById('counter').textContent = `${current + 1} / ${dialogues.length}`;
+  document.getElementById('prev-btn').disabled = current === 0;
+  document.getElementById('next-btn').disabled = false;
+  document.getElementById('next-btn').textContent = current === dialogues.length - 1 ? 'Récapitulatif ▶' : 'Suivant ▶';
+  document.getElementById('progress').style.width = `${((current + 1) / dialogues.length) * 100}%`;
+  document.getElementById('main-card').style.display = 'block';
+  document.getElementById('summary').style.display = 'none';
+}
+
+function switchTab(i) {
+  current = i;
+  showVocab = false;
+  render();
+}
+
+function toggleVocab() {
+  showVocab = !showVocab;
+  render();
+}
+
+function showSummary() {
+  speechSynthesis.cancel();
+  document.getElementById('main-card').style.display = 'none';
+  document.getElementById('summary').style.display = 'block';
+  document.getElementById('prev-btn').disabled = false;
+  document.getElementById('next-btn').disabled = true;
+  document.getElementById('counter').textContent = '✅ Fin';
+  document.getElementById('progress').style.width = '100%';
+  document.getElementById('recap-grid').innerHTML = recap.map(r =>
+    `<div class="recap-item"><strong>${r.fr}</strong>${r.en}</div>`
+  ).join('');
+}
+
+function navigate(dir) {
+  if (dir === 1 && current === dialogues.length - 1) { showSummary(); return; }
+  if (document.getElementById('summary').style.display !== 'none' && dir === -1) { current = dialogues.length - 1; showVocab = false; render(); return; }
+  current = Math.max(0, Math.min(dialogues.length - 1, current + dir));
+  showVocab = false;
+  render();
+}
+
+function restart() { current = 0; showVocab = false; render(); }
+
+render();
+</script>
+</body>
+</html>
